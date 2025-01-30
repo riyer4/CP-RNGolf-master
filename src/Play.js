@@ -71,10 +71,14 @@ class Play extends Phaser.Scene {
         this.oneWay.body.checkCollision.down = false
 
         // add pointer input
+
+        // let shotCounter = 0 //intialize for accuracy
+
         this.input.on('pointerdown', (pointer) => {
             let shotDirection = pointer.y <= this.ball.y ? 1 : -1
             this.ball.body.setVelocityX(Phaser.Math.Between(-this.SHOT_VELOCITY_X, this.SHOT_VELOCITY_X))
             this.ball.body.setVelocityY(Phaser.Math.Between(this.SHOT_VELOCITY_Y_MIN, this.SHOT_VELOCITY_Y_MAX) * shotDirection)
+            // this.shotCounter += 1
         })
 
         // this.input.on('pointerleft', (pointer) => {
@@ -158,7 +162,7 @@ class Play extends Phaser.Scene {
             this.ball.setVelocity(0)
             this.p1Score += 10
             this.shotCount += 1
-            this.shotPercentage += 1
+            this.shotPercentage += 10
             this.scoreLeft.text = `Score: ${this.p1Score}`
             this.shotLeft.text = `# of Shots: ${this.shotCount}`
             this.shotPercentageLeft.text = `Accuracy %: ${this.shotPercentage}%`
