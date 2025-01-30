@@ -50,7 +50,18 @@ class Play extends Phaser.Scene {
         wallB.setX(Phaser.Math.Between(0 + wallB.width / 2, width - wallB.width / 2))
         wallB.body.setImmovable(true)
 
-        this.walls = this.add.group([wallA, wallB])
+        //add moving wall
+
+        let wallC = this.physics.add.sprite(0, height / 2.5, 'wall')
+        wallC.setX(Phaser.Math.Between(0 + wallC.width / 2, width - wallC.width / 2))
+        wallC.body.setImmovable(true)
+        wallC.setVelocityX(200)
+        wallC.body.setCollideWorldBounds(true)
+        wallC.body.setBounce(1)
+
+        
+
+        this.walls = this.add.group([wallA, wallB, wallC])
 
 
         // add one-way
@@ -65,6 +76,12 @@ class Play extends Phaser.Scene {
             this.ball.body.setVelocityX(Phaser.Math.Between(-this.SHOT_VELOCITY_X, this.SHOT_VELOCITY_X))
             this.ball.body.setVelocityY(Phaser.Math.Between(this.SHOT_VELOCITY_Y_MIN, this.SHOT_VELOCITY_Y_MAX) * shotDirection)
         })
+
+        // this.input.on('pointerleft', (pointer) => {
+        //     let shotDirection = pointer.x <= this.ball.x ? 0.5 : -0.5
+        //     this.ball.body.setVelocityX(Phaser.Math.Between(-this.SHOT_VELOCITY_X, this.SHOT_VELOCITY_X))
+        //     this.ball.body.setVelocityY(Phaser.Math.Between(this.SHOT_VELOCITY_Y_MIN, this.SHOT_VELOCITY_Y_MAX) * shotDirection)
+        // })
 
         // cup/ball collision
         let goal = false
@@ -97,13 +114,17 @@ class Play extends Phaser.Scene {
             fixedWidth: 100
         }
 
+        this.scoreLeft = this.add.text(height / 50, height / 20, this.p1Score, scoreConfig)
+
     }
 
     update() {
         if (this.checkCollision(this.ball, this.cup)) {
             this.ball.setPosition(this.ball.startX, this.ball.startY)
             this.ball.setVelocity(0)
+            this.p1Score += 10
         }
+
 
     }
 
@@ -119,6 +140,11 @@ class Play extends Phaser.Scene {
         } else {
             return false
         }
+    }
+
+    holeInOne(cup) {
+        this.p1Score += cup.points
+        this.scoreLeft.text = this.p1Score  
     }
 }
 /*
