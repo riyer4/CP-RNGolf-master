@@ -52,7 +52,7 @@ class Play extends Phaser.Scene {
 
         //add moving wall
 
-        let wallC = this.physics.add.sprite(0, height / 2.5, 'wall')
+        let wallC = this.physics.add.sprite(0, height / 2.75, 'wall')
         wallC.setX(Phaser.Math.Between(0 + wallC.width / 2, width - wallC.width / 2))
         wallC.body.setImmovable(true)
         wallC.setVelocityX(200)
@@ -99,22 +99,56 @@ class Play extends Phaser.Scene {
         // score config
 
         this.p1Score = 0 //score initialization
+        this.shotCount = 0 // shot count initialization
+        this.shotPercentage = 0 // accuracy % initialization
 
         let scoreConfig = {
             fontFamily: 'Courier',
-            fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
+            fontSize: '25px',
+            backgroundColor: '#7b7eb6',
+            color: '#FFFFFF',
             allig: 'right',
             padding: {
                 top: 5,
                 bottom: 5,
             },
 
-            fixedWidth: 100
+            fixedWidth: 140
         }
 
-        this.scoreLeft = this.add.text(height / 50, height / 20, this.p1Score, scoreConfig)
+        let shotConfig = {
+            fontFamily: 'Courier',
+            fontSize: '25px',
+            backgroundColor: '#7b7eb6',
+            color: '#FFFFFF',
+            allig: 'right',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+
+            fixedWidth: 210
+        }
+
+        let shotPercentageConfig = {
+            fontFamily: 'Courier',
+            fontSize: '25px',
+            backgroundColor: '#7b7eb6',
+            color: '#FFFFFF',
+            allig: 'right',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+
+            fixedWidth: 220
+        }
+
+        this.scoreLeft = this.add.text(height / 50, height / 40, `Score: ${this.p1Score}`, scoreConfig)
+        this.shotLeft = this.add.text(height / 50, height / 12, `# of Shots: ${this.shotCount}`, shotConfig)
+        this.shotPercentageLeft = this.add.text(height / 50, height / 7, `Accuracy %: ${this.shotPercentage}%`, shotPercentageConfig)
+
+        
 
     }
 
@@ -123,7 +157,14 @@ class Play extends Phaser.Scene {
             this.ball.setPosition(this.ball.startX, this.ball.startY)
             this.ball.setVelocity(0)
             this.p1Score += 10
+            this.shotCount += 1
+            this.shotPercentage += 1
+            this.scoreLeft.text = `Score: ${this.p1Score}`
+            this.shotLeft.text = `# of Shots: ${this.shotCount}`
+            this.shotPercentageLeft.text = `Accuracy %: ${this.shotPercentage}%`
         }
+
+
 
 
     }
@@ -141,17 +182,12 @@ class Play extends Phaser.Scene {
             return false
         }
     }
-
-    holeInOne(cup) {
-        this.p1Score += cup.points
-        this.scoreLeft.text = this.p1Score  
-    }
 }
 /*
 CODE CHALLENGE
 Try to implement at least 3/4 of the following features during the remainder of class (hint: each takes roughly 15 or fewer lines of code to implement):
 [X] Add ball reset logic on successful shot
 [ ] Improve shot logic by making pointer’s relative x-position shoot the ball in correct x-direction
-[ ] Make one obstacle move left/right and bounce against screen edges
+[X] Make one obstacle move left/right and bounce against screen edges
 [ ] Create and display shot counter, score, and successful shot percentage
 */
