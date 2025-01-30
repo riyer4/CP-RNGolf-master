@@ -72,20 +72,19 @@ class Play extends Phaser.Scene {
 
         // add pointer input
 
-        // let shotCounter = 0 //intialize for accuracy
+        let shotCounter = 0 //intialize for accuracy
 
         this.input.on('pointerdown', (pointer) => {
-            let shotDirection = pointer.y <= this.ball.y ? 1 : -1
-            this.ball.body.setVelocityX(Phaser.Math.Between(-this.SHOT_VELOCITY_X, this.SHOT_VELOCITY_X))
-            this.ball.body.setVelocityY(Phaser.Math.Between(this.SHOT_VELOCITY_Y_MIN, this.SHOT_VELOCITY_Y_MAX) * shotDirection)
-            // this.shotCounter += 1
+            this.shotCounter++
+            let shotDirectionY = pointer.y <= this.ball.y ? 1 : -1
+            this.ball.body.setVelocityY(Phaser.Math.Between(this.SHOT_VELOCITY_Y_MIN, this.SHOT_VELOCITY_Y_MAX) * shotDirectionY)
+
+            let shotDirectionX = pointer.x < this.ball.x ? -1 : 1
+            this.ball.body.setVelocityX(Phaser.Math.Between(-this.SHOT_VELOCITY_X, this.SHOT_VELOCITY_X) * shotDirectionX)
+
         })
 
-        // this.input.on('pointerleft', (pointer) => {
-        //     let shotDirection = pointer.x <= this.ball.x ? 0.5 : -0.5
-        //     this.ball.body.setVelocityX(Phaser.Math.Between(-this.SHOT_VELOCITY_X, this.SHOT_VELOCITY_X))
-        //     this.ball.body.setVelocityY(Phaser.Math.Between(this.SHOT_VELOCITY_Y_MIN, this.SHOT_VELOCITY_Y_MAX) * shotDirection)
-        // })
+
 
         // cup/ball collision
         let goal = false
@@ -157,12 +156,13 @@ class Play extends Phaser.Scene {
     }
 
     update() {
+
         if (this.checkCollision(this.ball, this.cup)) {
             this.ball.setPosition(this.ball.startX, this.ball.startY)
             this.ball.setVelocity(0)
             this.p1Score += 10
             this.shotCount += 1
-            this.shotPercentage += 10
+            this.shotPercentage += 15
             this.scoreLeft.text = `Score: ${this.p1Score}`
             this.shotLeft.text = `# of Shots: ${this.shotCount}`
             this.shotPercentageLeft.text = `Accuracy %: ${this.shotPercentage}%`
