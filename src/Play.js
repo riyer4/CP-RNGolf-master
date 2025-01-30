@@ -37,6 +37,10 @@ class Play extends Phaser.Scene {
         this.ball.body.setBounce(0.5)
         this.ball.body.setDamping(true).setDrag(0.5)
 
+        //logging the starting position
+        this.ball.startX = this.ball.x
+        this.ball.startY = this.ball.y
+
         // add walls
         let wallA = this.physics.add.sprite(0, height / 4, 'wall')
         wallA.setX(Phaser.Math.Between(0 + wallA.width / 2, width - wallA.width / 2))
@@ -63,8 +67,10 @@ class Play extends Phaser.Scene {
         })
 
         // cup/ball collision
+        let goal = false
         this.physics.add.collider(this.ball, this.cup, (ball, cup) => {
             ball.destroy()
+            this.goal = true
         })
 
         // ball/wall collision
@@ -72,16 +78,38 @@ class Play extends Phaser.Scene {
 
         // ball/one-way collision
         this.physics.add.collider(this.ball, this.oneWay)
+
+        // score config
+
+        
     }
 
     update() {
+        if (this.checkCollision(this.ball, this.cup)) {
+            this.ball.setPosition(this.ball.startX, this.ball.startY)
+            this.ball.setVelocity(0)
+        }
 
+    }
+
+    checkCollision(ball, cup) {
+
+        //simple AABB (?) checking
+
+        if (ball.x < cup.x + cup.width && 
+            ball.x + ball.width > cup.x && 
+            ball.y < cup.y + cup.height && 
+            ball.height + ball.y > cup.y) {
+            return true
+        } else {
+            return false
+        }
     }
 }
 /*
 CODE CHALLENGE
 Try to implement at least 3/4 of the following features during the remainder of class (hint: each takes roughly 15 or fewer lines of code to implement):
-[ ] Add ball reset logic on successful shot
+[X] Add ball reset logic on successful shot
 [ ] Improve shot logic by making pointer’s relative x-position shoot the ball in correct x-direction
 [ ] Make one obstacle move left/right and bounce against screen edges
 [ ] Create and display shot counter, score, and successful shot percentage
